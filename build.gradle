@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.extrack'
+// CI passes the release tag: gradle build -PpluginVersion=1.0.1
+version = findProperty('pluginVersion') ?: '1.0.2'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    // the oldest supported API: anything that compiles here exists on every newer Paper
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // 1.16.5 servers still run on Java 8 and 11
+    options.release = 8
+    options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand(version: project.version)
+    }
+}
+
+jar {
+    archiveFileName = "ExTrack-${project.version}.jar"
+}

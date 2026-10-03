@@ -1,0 +1,48 @@
+name: ExTrack
+version: '${version}'
+main: ru.extrack.plugin.ExTrackPlugin
+api-version: '1.16'
+folia-supported: true
+author: ExTrack
+website: https://extrack.su
+description: Логи сервера, защита входа персонала и команды из панели ExTrack
+softdepend: [LuckPerms, ViaVersion]
+
+commands:
+  extrack:
+    description: Панель ExTrack
+    usage: /extrack help
+    aliases: [et]
+  report:
+    description: Пожаловаться на игрока
+    usage: /report <ник> <текст>
+  bug:
+    description: Сообщить об ошибке
+    usage: /bug <текст>
+
+permissions:
+  extrack.link:
+    description: Привязка игрового аккаунта к панели
+    default: true
+  extrack.report:
+    description: Команда /report
+    default: true
+  extrack.bug:
+    description: Команда /bug
+    default: true
+  extrack.info:
+    description: Сводка по игроку из панели
+    default: op
+  extrack.status:
+    description: Состояние подключения
+    default: op
+  extrack.reload:
+    description: Перезагрузка конфигурации
+    default: op
+  extrack.admin:
+    description: Все команды администратора
+    default: op
+    children:
+      extrack.info: true
+      extrack.status: true
+      extrack.reload: true

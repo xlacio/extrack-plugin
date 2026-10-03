@@ -1,0 +1,92 @@
+# ExTrack: связь сервера с панелью ExTrack
+# После правок выполните /extrack reload
+
+# Токен сервера: сайт -> сервер -> Настройки -> Подключение
+token: "et_..."
+
+# Адрес панели, всегда с https://
+url: "https://extrack.su"
+
+# Команды, которые панель выполняет от консоли при наказании из карточки игрока.
+# Сравнивается первое слово, префикс плагина тоже подходит: litebans:ban считается как ban.
+# op, deop, execute, sudo, stop, reload, lp, luckperms, whitelist и другие команды управления
+# сервером и правами панель не выполнит, даже если вписать их сюда.
+allowed-commands: [ban, tempban, banip, unban, mute, tempmute, unmute, kick, warn]
+
+# Что записывать в логи. На больших серверах больше всего событий дают
+# block_break, block_place, item_pickup и mob_kill: если логи упираются в лимит тарифа, начните с них.
+events:
+  join: true
+  quit: true
+  world_change: true
+  teleport: true
+  gamemode: true
+  chat: true
+  command: true
+  private_message: true
+  sign_edit: true
+  book_edit: true
+  anvil_rename: true
+  block_break: true
+  block_place: true
+  explosion: true
+  container_open: true
+  container_take: true
+  container_put: true
+  item_drop: true
+  item_pickup: true
+  craft: true
+  death: true
+  kill: true
+  mob_kill: true
+  advancement: true
+
+logging:
+  # Миры, из которых события не записываются
+  ignored-worlds: []
+
+  # Команды, которые не попадают в логи совсем
+  ignored-commands: []
+
+  # Личные сообщения. Записываются отдельным типом, текст видят только сотрудники с правом на ЛС
+  private-commands: [msg, tell, w, whisper, m, pm, t, emsg, etell, ewhisper, r, reply, er, ereply]
+  # Из них команды ответа, у которых нет ника получателя
+  reply-commands: [r, reply, er, ereply]
+
+  # Команды с паролями: аргументы заменяются звёздочками ещё до отправки
+  secret-commands: [login, l, log, register, reg, changepassword, changepass, cp, unregister, unreg, email, recovery, 2fa, totp, extrack, et]
+
+  teleport:
+    # Причины телепорта, которые записываются
+    causes: [COMMAND, PLUGIN, ENDER_PEARL, CHORUS_FRUIT, NETHER_PORTAL, END_PORTAL, END_GATEWAY, SPECTATE]
+    # Телепорты внутри мира короче этого расстояния не записываются: откаты античита, мелкие сдвиги
+    min-distance: 16
+
+  # Контейнеры, у которых записывается открытие и что из них взяли или положили
+  containers: [CHEST, BARREL, SHULKER_BOX, HOPPER, DISPENSER, DROPPER, FURNACE, BLAST_FURNACE, SMOKER, BREWING]
+
+staff-protection:
+  # Если панель не ответила при входе сотрудника, которому нужен код, не пускать его.
+  # С false сотрудник войдёт без кода, а вместе с ним и тот, кто зашёл под его ником.
+  fail-closed: true
+  # Сколько секунд ждать ответа панели при входе сотрудника
+  timeout: 5
+
+# Предупреждения и ошибки консоли на вкладку «Ошибки»
+console-errors: true
+
+# Группы игроков из LuckPerms: при входе и при изменении во время игры
+luckperms-groups: true
+
+reports:
+  # Команды /report и /bug
+  enabled: true
+  # Секунд между обращениями одного игрока
+  cooldown: 60
+
+# Валюта для /extrack donation, если в сумме не указана другая
+donation-currency: RUB
+
+# Сколько событий держать в памяти, пока панель недоступна.
+# То, что не успело уйти до выключения сервера, сохраняется на диск и отправляется после запуска.
+buffer-size: 50000
