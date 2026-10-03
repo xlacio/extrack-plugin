@@ -1,0 +1,47 @@
+name: Сборка
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+
+      - name: Сборка
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG#v}"
+          gradle build --no-daemon ${VERSION:+-PpluginVersion=$VERSION}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ExTrack
+          path: build/libs/*.jar
+
+      - name: Прикрепить jar к релизу
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp build/libs/ExTrack-*.jar ExTrack.jar
+          gh release upload "${{ github.event.release.tag_name }}" ExTrack.jar --clobber
